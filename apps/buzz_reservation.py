@@ -75,6 +75,11 @@ def main():
     st.write("東京のBUZZスタジオの予約表一覧です。日付を入力するとのその日の空き状況が確認できます。5人ほどなら15～20㎡、10人なら25～30㎡、それ以上なら40㎡以上が広さの目安となります。")
 
     selected_date = st.date_input("日付を選択してください")
+    time_list = ['6:00', '6:30', '7:00', '7:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30']
+    start_time = st.selectbox("開始時間", time_list, index=8)
+    end_time = st.selectbox("終了時間", time_list, index=14)
+
+    selected_time = time_list[time_list.index(start_time):time_list.index(end_time)]
 
     if st.button("予約表一覧を取得する"):
         for studio_name, studio_url in buzz_tokyo:
@@ -83,13 +88,13 @@ def main():
             soup = BeautifulSoup(response.text, "html.parser")
 
             # スタジオ名/アクセスの表示
-            st.markdown(f"[{studio_name}]({studio_url}): {soup.find(class_='top_info_catch').text}")
+            st.markdown(f"[{studio_name}]({table_url}): {soup.find(class_='top_info_catch').text}")
 
             # 予約表の一覧
             table = soup.find('table', class_="studio_all_reserve_time_table")
             table_columns = ['Time'] + [div.text for div in table.find_all('div', class_="studio_reserve_time_table_studio_name")]
             reservation_state = get_reservation_state(table)
-            reservation_table = pd.DataFrame(reservation_state, columns=table_columns).set_index('Time').T
+            reservation_table = pd.DataFrame(reservation_state, columns=table_columns).set_index('Time').T[selected_time]
             st.write(reservation_table)
             
             # 部屋のスペック
