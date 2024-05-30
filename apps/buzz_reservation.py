@@ -74,10 +74,15 @@ def main():
 
     st.write("東京のBUZZスタジオの予約表一覧です。日付を入力するとのその日の空き状況が確認できます。5人ほどなら15～20㎡、10人なら25～30㎡、それ以上なら40㎡以上が広さの目安となります。")
 
-    selected_date = st.date_input("日付を選択してください")
+    col1, col2, col3 = st.columns([2,1,1])
+    with col1:
+        selected_date = st.date_input("日付")
+    
     time_list = ['6:00', '6:30', '7:00', '7:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30']
-    start_time = st.selectbox("開始時間", time_list, index=8)
-    end_time = st.selectbox("終了時間", time_list, index=14)
+    with col2:
+        start_time = st.selectbox("開始時刻", time_list, index=8)
+    with col3:
+        end_time = st.selectbox("終了時刻", time_list, index=14)
 
     selected_time = time_list[time_list.index(start_time):time_list.index(end_time)]
 
